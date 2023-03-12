@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Header from "./components/Header";
+import AppBoddy from "./components/AppBoddy";
+import Footer from "./components/Footer";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  const addNewTodo = (todo) => {
+    setTodos([...todos, todo]);
+  };
+
+  const deleteTodo = (todo) => {
+    const newTodoList = todos.filter((t) => t.content !== todo.content);
+    setTodos([...newTodoList]);
+  };
+
+  const checkTodo = (todo) => {
+    const newTodoList = todos.filter((t) => {
+      if( t.content === todo.content ) {
+        t.done = !todo.done;
+        return [ ...todos ]
+      } else {
+        return t
+      }
+    })
+
+    setTodos([...newTodoList]);
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section className="todoapp">
+      <Header todoValue={addNewTodo} todos={todos} />
+      {todos.length !== 0 && (
+        <AppBoddy todos={todos} deletedTodo={deleteTodo} checkedTodo={checkTodo} />
+      )}
+      {todos.length !== 0 && <Footer todos={todos} />}
+    </section>
   );
 }
 
